@@ -6,21 +6,10 @@ For demo purposes the Micropython target and the desired release prefix are set 
 
 When run all of the fetched data files are saved in a `stubs` directory (the json manifests and the wheel archive files) along with the extracted stub files in a subdirectory with the target package name.
 
-## Project Structure
-
-```
-├── src/
-│   └── index.ts          # Main application file
-├── dist/                 # Compiled JavaScript output
-├── .vscode/
-│   └── launch.json       # VS Code debug configuration
-├── package.json          # Project configuration and dependencies
-├── tsconfig.json         # TypeScript compiler configuration
-└── README.md            # This file
-```
+## Verification testing
+As noted in the three test cases at the top of index.ts, 3 target stub packages were fetched, along with stdlib which is a dependency of all 3.  Then a separate project was created with a python virtual environment into which each package was installed with `pip install <packagename>` in separate tests.  Then a file by file full text comparison was done between the virtual environment and the stubs extracted by this tool.  In all cases the corresponding files were identical.  
 
 ## Getting Started
-
 ### Prerequisites
 
 - Node.js (version 16 or higher)
