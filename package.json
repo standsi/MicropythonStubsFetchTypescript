@@ -1,0 +1,30 @@
+{
+  "name": "typescript-console-app",
+  "version": "1.0.0",
+  "description": "TypeScript console application to simulate 'pip' install of stubs",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "watch": "tsc -w"
+  },
+  "keywords": [
+    "typescript",
+    "console",
+    "node"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.12.2",
+    "fs": "^0.0.1-security",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
+    "zip-lib": "^1.1.2"
+  }
+}
