@@ -9,6 +9,16 @@ When run all of the fetched data files are saved in a `stubs` directory (the jso
 ## Verification testing
 As noted in the three test cases at the top of index.ts, 3 target stub packages were fetched, along with stdlib which is a dependency of all 3.  Then a separate project was created with a python virtual environment into which each package was installed with `pip install <packagename>` in separate tests.  Then a file by file full text comparison was done between the virtual environment and the stubs extracted by this tool.  In all cases the corresponding files were identical.  
 
+## Using in a vscode project
+To use the fetched stubs in a vscode project, add the `stubs/<package_name>` directory to the `python.analysis.extraPaths` setting in your workspace settings.json file.  For example:
+```json
+{
+    "python.analysis.extraPaths": [
+        "./stubs/micropython-esp32-stubs"
+    ]
+}
+```
+
 ## Getting Started
 ### Prerequisites
 

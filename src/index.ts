@@ -6,14 +6,14 @@ import * as os from 'os';
 import { get } from 'http';
 import { getMatchingDist } from './getMatchingDist';
 
-// const targetStubPackage = 'micropython-esp32-stubs';
-// const targetReleasePrefix = '1.26';
+const targetStubPackage = 'micropython-esp32-stubs';
+const targetReleasePrefix = '1.26';
 
 // const targetStubPackage = 'micropython-rp2-pico-stubs';
 // const targetReleasePrefix = '1.20';
 
-const targetStubPackage = 'micropython-stm32-stubs';
-const targetReleasePrefix = '1.26';
+// const targetStubPackage = 'micropython-stm32-stubs';
+// const targetReleasePrefix = '1.26';
 
 
 // function to return url of pypi json for package
@@ -259,65 +259,22 @@ async function main(): Promise<void> {
     if (!fs.existsSync(stubsDir)) {
         fs.mkdirSync(stubsDir);
     }
-    // download target package stubs json
-    const destpath_target_package = path.join(rootpath, 'stubs', targetStubPackage + '.json');
-    const url = getPyPiPackageJsonUrl(targetStubPackage);
-    await getPyPiStubsJson(url, destpath_target_package);
-
-    // download target package stub wheel for release prefix- NO version spec for top level
-    const [wheelPath, fullRelease] = await downloadLatestStubWheel(targetReleasePrefix, '', destpath_target_package, path.join(rootpath, 'stubs'));
-
-    // now upzip the wheel into stubs/targetStubPackage
-    const extractPath = path.join(rootpath, 'stubs', targetStubPackage);
-    // make sure the extraction directory exists
-    if (!fs.existsSync(extractPath)) {
-        fs.mkdirSync(extractPath);
-    }
-    try {
-        const unzip = new zl.Unzip({
-            overwrite: true
-        });
-        await unzip.extract(wheelPath, extractPath);
-        console.log(`Extracted ${targetStubPackage} wheel to ${extractPath}`);
-    } catch (err) {
-        console.error("Error extracting wheel:", err);
-        return;
-    }
-
-    // now find any required distributions from the METADATA file of the target
-    const requiredDists = await findRequiredDistributions(extractPath, fullRelease);
-    console.log("Required distributions:", requiredDists);
-
+    // ** Can just call the recursive download with the target as the start
     // Process all dependencies recursively
     console.log("\n=== Processing Dependencies Recursively ===");
     const processedPackages = new Map<string, ProcessedPackage>();
-
-    // Mark the main package as processed to avoid circular dependencies
-    processedPackages.set(targetStubPackage, {
-        name: targetStubPackage,
-        version: fullRelease,
-        path: extractPath
-    });
-
-    for (const dist of requiredDists) {
-        const distSpec = dist.split(' ');
-        const packageName = distSpec[0].trim(); // get package name before any version specifiers
-        let versionSpec = '';
-        if(distSpec.length > 1) {
-            versionSpec = distSpec.slice(1).join(' ').trim();
-        }
-        console.log(`\nStarting dependency chain for: ${packageName}`);
-
-        await downloadPackageWithDependencies(
-            packageName,
-            versionSpec,
-            targetReleasePrefix,
-            rootpath,
-            extractPath,
-            processedPackages,
-            1
-        );
-    }
+    //
+    console.log(`\nStarting dependency chain for: ${targetStubPackage}`);
+    const extractPath = path.join(rootpath, 'stubs', targetStubPackage);
+    await downloadPackageWithDependencies(
+        targetStubPackage,
+        '',
+        targetReleasePrefix,
+        rootpath,
+        extractPath,
+        processedPackages,
+        1
+    );
 
     console.log("\n=== Dependency Processing Complete ===");
     console.log("Processed packages:");
