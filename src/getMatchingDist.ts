@@ -1,4 +1,4 @@
-/** module:getMatchingDist */
+/** @module:getMatchingDist */
 
 const comparisonRegex = /^(>=|<=|==|>|<)(.*)$/;
 

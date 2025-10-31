@@ -1,25 +1,11 @@
+/** @module:downloadPackageWithDependencies */
+
 import * as axios from 'axios';
 import * as zl from 'zip-lib';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
-import { get } from 'http';
-import { getMatchingDist } from './getMatchingDist';
-import { downloadPackageWithDependencies,ProcessedPackage } from './downloadPackageWithDependencies';
+import { getMatchingDist } from './getMatchingDist.js';
 
-// set directory for stubs, either package name or typings
-const stubsDirectoryNaming: string = 'package'; // 'typings' or 'package'
-
-const targetStubPackage = 'micropython-esp32-stubs';
-const targetReleasePrefix = '1.26';
-
-// const targetStubPackage = 'micropython-rp2-pico-stubs';
-// const targetReleasePrefix = '1.20';
-
-// const targetStubPackage = 'micropython-stm32-stubs';
-// const targetReleasePrefix = '1.26';
-
-/*
 // function to return url of pypi json for package
 function getPyPiPackageJsonUrl(packageName: string): string {
     return `https://pypi.org/pypi/${packageName}/json`;
@@ -134,14 +120,14 @@ async function findRequiredDistributions(extractedWheelPath: string, fullRelease
 
 
 // Interface to track processed packages and avoid infinite loops
-interface ProcessedPackage {
+export interface ProcessedPackage {
     name: string;
     version: string;
     path: string;
 }
 
 // Recursive function to download and process a package and all its dependencies
-async function downloadPackageWithDependencies(
+export async function downloadPackageWithDependencies(
     packageName: string,
     versionSpec: string,
     targetRelease: string,
@@ -250,49 +236,3 @@ async function downloadPackageWithDependencies(
         console.error(`${indent}Error processing package ${packageName}:`, error);
     }
 }
-*/
-
-async function main(): Promise<void> {
-    console.log("=== TypeScript Fetch Micropython Stubs ===");
-    const rootpath = path.join(__dirname, '../');
-
-    console.log("Application started successfully!");
-    console.log(`Current time: ${new Date().toLocaleString()}`);
-
-    // ensure root stubs directory exists
-    const stubsDir = path.join(rootpath, 'stubs');
-    if (!fs.existsSync(stubsDir)) {
-        fs.mkdirSync(stubsDir);
-    }
-    // ** Can just call the recursive download with the target as the start
-    // Process all dependencies recursively
-    console.log("\n=== Processing Dependencies Recursively ===");
-    const processedPackages = new Map<string, ProcessedPackage>();
-    console.log(`\nStarting dependency chain for: ${targetStubPackage}`);
-    // ** decide if extract copies done to package name or 'typings' folder
-    let extractPath: string=path.join(rootpath, 'stubs', targetStubPackage);
-    if(stubsDirectoryNaming==='typings'){
-        extractPath=path.join(rootpath, 'stubs', 'typings');
-    }
-    await downloadPackageWithDependencies(
-        targetStubPackage,
-        '',
-        targetReleasePrefix,
-        rootpath,
-        extractPath,
-        processedPackages,
-        1
-    );
-
-    console.log("\n=== Dependency Processing Complete ===");
-    console.log("Processed packages:");
-    processedPackages.forEach((pkg, name) => {
-        console.log(`  - ${name} (${pkg.version})`);
-    });
-}
-
-// Run the main function and handle any unhandled promise rejections
-main().catch((error) => {
-    console.error("Unhandled error in main:", error);
-    process.exit(1);
-});
