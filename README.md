@@ -2,15 +2,15 @@
 
 Demo code to show a method for fetching Micropython stubs from Pypi in manner similar to 'pip' including recursive dependency resolution.
 
-For demo purposes the Micropython target and the desired release prefix are set in constants at the top of the index.ts file.
+For demo purposes the Micropython target and the desired release prefix are set in constants at the top of the index.ts file.  Also included is a flag to choose whether the extracted stubs are copied into a directory named for the package, or into a common 'typings' directory.  If typings is chosen, the folder can be copied to the root of the micropython project and is generally recognized by the Python language server for stubs.
 
-When run all of the fetched data files are saved in a `stubs` directory (the json manifests and the wheel archive files) along with the extracted stub files in a subdirectory with the target package name.
+When run all of the fetched data files are saved in a `stubs` directory (the json manifests and the wheel archive files) along with the extracted stub files in a subdirectory with the target package name or the folder named 'typings'.
 
 ## Verification testing
 As noted in the three test cases at the top of index.ts, 3 target stub packages were fetched, along with stdlib which is a dependency of all 3.  Then a separate project was created with a python virtual environment into which each package was installed with `pip install <packagename>` in separate tests.  Then a file by file full text comparison was done between the virtual environment and the stubs extracted by this tool.  In all cases the corresponding files were identical.  
 
 ## Using in a vscode project
-To use the fetched stubs in a vscode project, add the `stubs/<package_name>` directory to the `python.analysis.extraPaths` setting in your workspace settings.json file.  For example:
+To use the fetched stubs in a vscode project if the stubs are put in the folder named for the package, add the `stubs/<package_name>` directory to the `python.analysis.extraPaths` setting in your workspace settings.json file.  For example:
 ```json
 {
     "python.analysis.extraPaths": [
@@ -18,6 +18,8 @@ To use the fetched stubs in a vscode project, add the `stubs/<package_name>` dir
     ]
 }
 ```
+
+If the stubs are put in the 'typings' folder copy it to the root of your project where it should be recognized by the Python language server for stubs.
 
 ## Getting Started
 ### Prerequisites

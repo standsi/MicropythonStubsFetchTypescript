@@ -6,6 +6,9 @@ import * as os from 'os';
 import { get } from 'http';
 import { getMatchingDist } from './getMatchingDist';
 
+// set directory for stubs, either package name or typings
+const stubsDirectoryNaming: string = 'typings'; // 'typings' or 'package'
+
 const targetStubPackage = 'micropython-esp32-stubs';
 const targetReleasePrefix = '1.26';
 
@@ -263,9 +266,12 @@ async function main(): Promise<void> {
     // Process all dependencies recursively
     console.log("\n=== Processing Dependencies Recursively ===");
     const processedPackages = new Map<string, ProcessedPackage>();
-    //
     console.log(`\nStarting dependency chain for: ${targetStubPackage}`);
-    const extractPath = path.join(rootpath, 'stubs', targetStubPackage);
+    // ** decide if extract copies done to package name or 'typings' folder
+    let extractPath: string=path.join(rootpath, 'stubs', targetStubPackage);
+    if(stubsDirectoryNaming==='typings'){
+        extractPath=path.join(rootpath, 'stubs', 'typings');
+    }
     await downloadPackageWithDependencies(
         targetStubPackage,
         '',
