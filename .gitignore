@@ -1,6 +1,9 @@
 # don't put any of the fetched stubs in repo.
 stubs/
 
+# don't put the installed MicroPython libraries in repo
+lib/
+
 # Logs
 logs
 *.log
