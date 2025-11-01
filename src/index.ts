@@ -6,6 +6,7 @@ import * as os from 'os';
 import { get } from 'http';
 import { getMatchingDist } from './getMatchingDist';
 import { downloadPackageWithDependencies,ProcessedPackage } from './downloadPackageWithDependencies';
+import { mainLib } from './librarySupport';
 
 // set directory for stubs, either package name or typings
 const stubsDirectoryNaming: string = 'package'; // 'typings' or 'package'
@@ -289,6 +290,24 @@ async function main(): Promise<void> {
     processedPackages.forEach((pkg, name) => {
         console.log(`  - ${name} (${pkg.version})`);
     });
+
+    console.log("=== TypeScript Micropython library install ===");
+    
+    // first neopixel - test OK
+    await mainLib('neopixel', true,true);
+    console.log("=== Neopixel library install Finished ===");
+    
+    // then collections - test OK
+    await mainLib('collections-defaultdict', true,false);
+    console.log("=== default dict library install Finished ===");
+    
+    // networking bundle - test OK
+    await mainLib('bundle-networking', true,false);
+    console.log("=== Networking bundle - tasks completed successfully ===");
+
+    // sensor ds18x20
+    await mainLib('ds18x20', true,false);
+    console.log("=== ds18x20 tasks completed successfully ===");
 }
 
 // Run the main function and handle any unhandled promise rejections
