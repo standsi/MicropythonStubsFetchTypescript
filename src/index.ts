@@ -11,8 +11,14 @@ import { mainLib } from './librarySupport';
 // set directory for stubs, either package name or typings
 const stubsDirectoryNaming: string = 'package'; // 'typings' or 'package'
 
-const targetStubPackage = 'micropython-esp32-stubs';
+// const targetStubPackage = 'micropython-esp32-stubs';
+// const targetReleasePrefix = '1.26';
+
+const targetStubPackage = 'micropython-rp2-rpi_pico_w-stubs';
 const targetReleasePrefix = '1.26';
+
+// const targetStubPackage = 'micropython-rp2-rpi_pico-stubs';
+// const targetReleasePrefix = '1.26';
 
 // const targetStubPackage = 'micropython-rp2-pico-stubs';
 // const targetReleasePrefix = '1.20';
